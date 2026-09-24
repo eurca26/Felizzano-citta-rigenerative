@@ -360,6 +360,10 @@ textarea{
 </div>
 
 <script>
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyto8m_rf1rZqSxERln0LK6yd0T6RR6lIVTFQQ0zSS5CGVMiG6yEo_cr_Qg1PFFjF7G/exec';
+let submissionInProgress = false;
+let submissionDone = false;
+
 const areas = [
   {
     id:'fubine',
@@ -516,7 +520,7 @@ function update(){
 
   submitBtn.disabled=used!==10;
   submitBtn.textContent=used===10
-    ? 'Mostra le mie scelte'
+    ? 'Invia le mie scelte'
     : `Distribuisci ancora ${10-used} ${10-used===1?'punto':'punti'}`;
 
   renderDetails();
@@ -572,8 +576,8 @@ function esc(s){
   }[c]));
 }
 
-submitBtn.addEventListener('click',()=>{
-  if(total()!==10) return;
+submitBtn.addEventListener('click', async ()=>{
+  if(total()!==10 || submissionInProgress || submissionDone) return;
 
   const ranking=areas
     .filter(a=>scores[a.id]>0)
@@ -583,36 +587,93 @@ submitBtn.addEventListener('click',()=>{
     .map(x=>areas.find(a=>a.id===x.value)?.title)
     .filter(Boolean);
 
-  const open=esc(document.getElementById('openText').value.trim());
+  const openRaw=document.getElementById('openText').value.trim();
+  const open=esc(openRaw);
+
+  const getElements=(id)=>{
+    const area=areas.find(a=>a.id===id);
+    return [...selectedDetails[id]].map(idx=>area.opts[Number(idx)]);
+  };
+
+  const payload={
+    viaFubine_punti:scores.fubine,
+    paoloErcole_punti:scores.centro,
+    centroCimitero_punti:scores.stazione,
+    spaltoNord_punti:scores.spalti,
+    viaFubine_elementi:getElements('fubine'),
+    paoloErcole_elementi:getElements('centro'),
+    centroCimitero_elementi:getElements('stazione'),
+    spaltoNord_elementi:getElements('spalti'),
+    priorita_1:top2[0] || '',
+    priorita_2:top2[1] || '',
+    proposta_libera:openRaw
+  };
+
+  submissionInProgress=true;
+  submitBtn.disabled=true;
+  submitBtn.textContent='Invio in corso…';
+  resetBtn.disabled=true;
 
   result.innerHTML=`
-    <div class="eyebrow">Le tue scelte</div>
-    <h3 style="margin-top:0">Ecco le priorità che hai indicato</h3>
-
-    ${ranking.map((a,i)=>`
-      <div class="rank">
-        <span><strong>${i+1}. ${a.title}</strong></span>
-        <strong>${scores[a.id]} ${scores[a.id]===1?'punto':'punti'}</strong>
-      </div>
-
-      ${selectedDetails[a.id].size
-        ? `<div style="margin:-2px 0 12px 14px;color:var(--muted);font-size:.88rem">
-            Per questo ambito hai scelto: ${[...selectedDetails[a.id]].map(idx=>a.opts[Number(idx)]).join(' · ')}
-           </div>`
-        : ''
-      }
-    `).join('')}
-
-    <p><strong>Le due priorità da cui partire:</strong> ${top2.length ? esc(top2.join(' / ')) : 'non indicate'}</p>
-
-    ${open ? `<p><strong>La tua proposta aggiuntiva:</strong> ${open}</p>` : ''}
-
-    <div class="note">
-      Le tue risposte saranno lette insieme agli altri contributi raccolti durante il percorso partecipativo.
-    </div>`;
-
+    <div class="eyebrow">Invio del contributo</div>
+    <h3 style="margin-top:0">Stiamo registrando le tue scelte…</h3>
+    <p>Attendi qualche secondo senza chiudere la pagina.</p>`;
   result.classList.add('show');
   result.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  try{
+    await fetch(WEB_APP_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)
+    });
+
+    submissionDone=true;
+    submissionInProgress=false;
+
+    document.querySelectorAll('.pm, input[type="checkbox"], textarea').forEach(el=>el.disabled=true);
+    submitBtn.disabled=true;
+    submitBtn.textContent='Contributo inviato';
+    resetBtn.style.display='none';
+
+    result.innerHTML=`
+      <div class="eyebrow">Grazie per il tuo contributo</div>
+      <h3 style="margin-top:0">Le tue scelte sono state inviate.</h3>
+      <p>Il Comune leggerà questo contributo insieme alle altre risposte raccolte nel percorso partecipativo.</p>
+
+      ${ranking.map((a,i)=>`
+        <div class="rank">
+          <span><strong>${i+1}. ${a.title}</strong></span>
+          <strong>${scores[a.id]} ${scores[a.id]===1?'punto':'punti'}</strong>
+        </div>
+
+        ${selectedDetails[a.id].size
+          ? `<div style="margin:-2px 0 12px 14px;color:var(--muted);font-size:.88rem">
+              Per questo ambito hai scelto: ${[...selectedDetails[a.id]].map(idx=>a.opts[Number(idx)]).join(' · ')}
+             </div>`
+          : ''
+        }
+      `).join('')}
+
+      <p><strong>Le priorità da cui partire:</strong> ${top2.length ? esc(top2.join(' / ')) : 'non indicate'}</p>
+      ${open ? `<p><strong>La tua proposta aggiuntiva:</strong> ${open}</p>` : ''}
+
+      <div class="note">
+        Le indicazioni raccolte saranno confrontate con i risultati del questionario, con quanto emerso durante l'incontro pubblico e con le verifiche tecniche del progettista.
+      </div>`;
+
+  }catch(error){
+    submissionInProgress=false;
+    submitBtn.disabled=false;
+    submitBtn.textContent='Riprova l’invio';
+    resetBtn.disabled=false;
+
+    result.innerHTML=`
+      <div class="eyebrow">Invio non completato</div>
+      <h3 style="margin-top:0">Non siamo riusciti a registrare il contributo.</h3>
+      <p>Controlla la connessione e prova di nuovo. Le tue scelte sono ancora presenti nella pagina.</p>`;
+  }
 });
 
 resetBtn.addEventListener('click',()=>{

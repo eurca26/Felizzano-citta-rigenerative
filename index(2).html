@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Progettista per un giorno – Comune di Felizzano</title>
+<style>
+:root{
+  --bg:#f5f8f6;
+  --panel:#ffffff;
+  --soft:#eef5f1;
+  --soft2:#e4f0ea;
+  --text:#17352f;
+  --muted:#586b65;
+  --accent:#176f5d;
+  --accent-dark:#0f5a4b;
+  --border:#cfded6;
+  --focus:#8b5cf6;
+  --warn:#fff8e8;
+  --warn-border:#e7d5a2;
+  --shadow:0 10px 28px rgba(22,53,47,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:18px;
+  line-height:1.5;
+  color:var(--text);
+  background:linear-gradient(180deg,#ffffff 0%,var(--bg) 100%);
+}
+button,input,select,textarea{font:inherit}
+button,input,select,textarea{outline:none}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid var(--focus);
+  outline-offset:3px;
+}
+button{touch-action:manipulation}
+.wrap{max-width:1160px;margin:0 auto;padding:22px}
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:10px 0 20px;border-bottom:1px solid var(--border)
+}
+.brand{display:flex;align-items:center;gap:12px}
+.seal{
+  width:50px;height:50px;border-radius:50%;background:var(--soft2);
+  display:grid;place-items:center;font-size:25px;border:1px solid var(--border)
+}
+.brand h1{font-size:1.05rem;margin:0;font-weight:850}
+.brand p{margin:3px 0 0;font-size:.82rem;color:var(--muted)}
+.badge{
+  padding:9px 13px;border-radius:999px;background:var(--accent);
+  border:1px solid var(--accent);color:#fff;font-size:.78rem;font-weight:850
+}
+.hero{
+  margin:24px 0 18px;padding:30px;border:1px solid var(--border);
+  border-radius:24px;background:linear-gradient(135deg,#fff,var(--soft));box-shadow:var(--shadow)
+}
+.eyebrow{
+  font-size:.78rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px
+}
+.hero h2{font-size:clamp(2.2rem,5vw,4.5rem);line-height:1;margin:0 0 12px}
+.hero .lead{font-size:1.3rem;font-weight:800;margin-bottom:8px}
+.hero .copy{color:var(--muted);max-width:900px}
+.path{
+  margin-top:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+.step{
+  border:1px solid var(--border);border-radius:14px;background:#fff;padding:14px
+}
+.step b{display:block;font-size:.95rem;margin-bottom:4px}
+.step span{font-size:.84rem;color:var(--muted)}
+.notice{
+  margin-top:18px;background:#fff;border-left:5px solid var(--accent);
+  border-radius:12px;padding:15px 16px;color:var(--text)
+}
+.notice strong{color:var(--accent-dark)}
+
+.section{margin-top:30px}
+.section h3{font-size:1.55rem;margin:0 0 6px}
+.section>.intro{margin:0 0 15px;color:var(--muted)}
+.insight-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.insight{
+  position:relative;background:linear-gradient(180deg,#ffffff 0%, #f8fbf9 100%);
+  border:1px solid var(--border);border-radius:18px;padding:16px;
+  box-shadow:0 6px 18px rgba(22,53,47,.05);overflow:hidden
+}
+.insight::before{content:'';position:absolute;left:0;top:0;right:0;height:5px;background:linear-gradient(90deg,var(--accent),#7ec5b4)}
+.insight-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.insight-tag{display:inline-block;padding:5px 9px;border-radius:999px;background:var(--soft);color:var(--accent-dark);font-size:.72rem;font-weight:800;letter-spacing:.02em;text-transform:uppercase}
+.insight-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--soft2);font-size:18px}
+.insight strong{display:block;color:var(--accent-dark);font-size:1.55rem;line-height:1.08;margin-bottom:7px}
+.insight span{display:block;font-size:.9rem;color:var(--muted);line-height:1.42}
+.insight b{color:var(--text)}
+.insight.highlight{background:linear-gradient(180deg,#f5fbf8 0%, #ffffff 100%)}
+.listening-wrap{background:linear-gradient(180deg,#f7fbf9 0%, #ffffff 100%);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 8px 22px rgba(22,53,47,.05)}
+.listening-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.listening-label{display:inline-block;padding:7px 11px;border-radius:999px;background:var(--accent);color:#fff;font-size:.78rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase}
+.listening-note{max-width:360px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px 14px;color:var(--muted);font-size:.88rem;line-height:1.4}
+
+.counter{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:16px 18px;background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;margin-bottom:13px
+}
+.counter .num{font-size:2.2rem;font-weight:900;color:var(--accent-dark)}
+.dots{display:flex;gap:7px;flex-wrap:wrap}
+.dot{width:12px;height:12px;border-radius:50%;border:1px solid var(--border);background:#fff}
+.dot.on{background:var(--accent);border-color:var(--accent)}
+.area-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.area-card{
+  background:var(--panel);border:2px solid var(--border);border-radius:18px;padding:18px;
+  box-shadow:0 4px 16px rgba(22,53,47,.04);transition:.15s
+}
+.area-card.active{border-color:var(--accent);background:var(--soft)}
+.area-top{display:flex;gap:14px;align-items:flex-start}
+.icon{
+  width:48px;height:48px;flex:0 0 48px;border-radius:50%;
+  background:var(--soft2);display:grid;place-items:center;font-size:23px
+}
+.area-card h4{font-size:1.02rem;margin:0 0 5px}
+.area-card p{font-size:.9rem;color:var(--muted);margin:0}
+.controls{display:flex;align-items:center;gap:10px;margin-top:16px}
+.pm{
+  width:46px;height:46px;border-radius:12px;border:1px solid var(--border);
+  background:#fff;color:var(--text);font-size:1.4rem;font-weight:900;cursor:pointer
+}
+.pm.plus{background:var(--soft2);color:var(--accent-dark);border-color:transparent}
+.pm:disabled{opacity:.35;cursor:not-allowed}
+.value{min-width:32px;text-align:center;font-size:1.4rem;font-weight:900}
+.small{font-size:.82rem;color:var(--muted)}
+
+.detail-wrap{display:grid;gap:14px}
+.detail-card{
+  background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px
+}
+.detail-card h4{margin:0 0 5px;font-size:1.05rem}
+.detail-card p{margin:0 0 12px;color:var(--muted);font-size:.9rem}
+.check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.check,.pick{
+  display:flex;align-items:flex-start;gap:10px;border:1px solid var(--border);
+  border-radius:12px;padding:12px 13px;background:#fff;cursor:pointer
+}
+.check input,.pick input{width:20px;height:20px;margin-top:2px;flex:0 0 auto}
+.check span,.pick span{font-size:.92rem}
+.limit{margin-top:10px;font-size:.82rem;color:var(--muted)}
+
+.pick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+
+textarea{
+  width:100%;min-height:120px;border:1px solid var(--border);border-radius:12px;
+  padding:13px 14px;background:#fff;color:var(--text);resize:vertical
+}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:26px 0}
+.btn{
+  min-height:50px;padding:0 20px;border-radius:12px;border:1px solid var(--border);
+  font-weight:850;cursor:pointer
+}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.secondary{background:#fff;color:var(--text)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.result{
+  display:none;background:linear-gradient(135deg,var(--soft),#fff);
+  border:1px solid var(--border);border-radius:18px;padding:20px;margin:10px 0 24px
+}
+.result.show{display:block}
+.rank{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin:8px 0
+}
+.note{
+  margin-top:18px;padding:15px 16px;background:var(--warn);
+  border:1px solid var(--warn-border);border-radius:14px;color:#5d502e;font-size:.88rem
+}
+.footer{text-align:center;color:var(--muted);font-size:.8rem;padding:28px 0 12px}
+
+@media(max-width:900px){
+  .path,.insight-grid{grid-template-columns:1fr 1fr}
+  .area-grid,.check-grid,.pick-grid{grid-template-columns:1fr}
+}
+@media(max-width:580px){
+  body{font-size:17px}
+  .wrap{padding:14px}
+  .badge{display:none}
+  .hero{padding:20px}
+  .path,.insight-grid{grid-template-columns:1fr}
+  .actions{justify-content:stretch}
+  .btn{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="seal" aria-hidden="true">🏛️</div>
+      <div>
+        <h1>Comune di Felizzano</h1>
+        <p>Percorso di progettazione partecipata</p>
+      </div>
+    </div>
+    <div class="badge">PARTECIPA ALLE SCELTE</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Bando “Città Rigenerative”</div>
+    <h2>Progettista per un giorno</h2>
+    <div class="lead">Aiutaci a scegliere cosa migliorare davvero a Felizzano.</div>
+    <div class="copy">
+      Il Comune di Felizzano intende partecipare al Bando regionale <strong>“Città Rigenerative”</strong>.
+      Il Comune e il progettista stanno lavorando su possibili interventi per rendere più sicuri e facili
+      gli spostamenti a piedi e in bicicletta e per collegare meglio le diverse parti del paese.
+      Con questo strumento puoi aiutare il Comune e il progettista a capire <strong>su quali interventi lavorare con maggiore attenzione</strong> e quali caratteristiche ritieni più importanti.
+    </div>
+
+    <div class="notice" style="margin-top:22px">
+      <strong>È in corso un percorso di ascolto e co-progettazione.</strong>
+      Il Comune vuole costruire il progetto insieme a cittadini, famiglie e realtà del territorio.
+      Il percorso prevede quattro momenti: prima ascoltiamo i bisogni, poi ci confrontiamo sulle possibili soluzioni,
+      raccogliamo le priorità e infine restituiamo in modo chiaro quali proposte vengono accolte, modificate o non recepite.
+    </div>
+
+    <div class="path" aria-label="Le quattro fasi del percorso partecipativo">
+      <div class="step"><b>1. Ascolto</b><span>Questionario cittadini e famiglie</span></div>
+      <div class="step"><b>2. Confronto</b><span>Incontro pubblico e ipotesi progettuale</span></div>
+      <div class="step"><b>3. Scelte</b><span>Priorità e caratteristiche indicate qui</span></div>
+      <div class="step"><b>4. Restituzione</b><span>Cosa viene accolto, modificato o non recepito</span></div>
+    </div>
+
+    <div class="notice">
+      <strong>Il tuo contributo non finisce qui.</strong>
+      Le scelte raccolte saranno confrontate con i risultati del questionario e con le verifiche tecniche del progettista.
+      Il Comune potrà così spiegare quali proposte vengono accolte, quali vengono modificate e quali non risultano realizzabili.
+    </div>
+  </section>
+
+  <section class="section">
+    <h3>Prima abbiamo ascoltato il paese</h3>
+    <p class="intro">
+      Il questionario già svolto ci ha aiutato a capire dove sono i problemi e quali bisogni vengono sentiti di più.
+      Queste sono alcune delle indicazioni principali emerse finora.
+    </p>
+
+    <div class="listening-wrap">
+      <div class="listening-top">
+        <div class="listening-label">Cosa è emerso dal questionario</div>
+        <div class="listening-note">Questi dati riassumono i bisogni che compaiono con più forza nelle risposte raccolte finora.</div>
+      </div>
+
+      <div class="insight-grid">
+        <article class="insight highlight">
+          <div class="insight-head"><span class="insight-tag">Priorità</span><span class="insight-icon">🚶</span></div>
+          <strong>75,5%</strong>
+          <span>indica <b>marciapiedi e percorsi pedonali più sicuri</b> tra le principali necessità.</span>
+        </article>
+
+        <article class="insight highlight">
+          <div class="insight-head"><span class="insight-tag">Potenziale</span><span class="insight-icon">🚲</span></div>
+          <strong>80,3%</strong>
+          <span>si muoverebbe più spesso <b>a piedi o in bicicletta</b> se i percorsi fossero più sicuri e comodi.</span>
+        </article>
+
+        <article class="insight">
+          <div class="insight-head"><span class="insight-tag">Luogo chiave</span><span class="insight-icon">📍</span></div>
+          <strong>Via Fubine / SP77</strong>
+          <span>è il collegamento che compare più spesso nelle <b>risposte libere</b> dei cittadini.</span>
+        </article>
+
+        <article class="insight">
+          <div class="insight-head"><span class="insight-tag">Altro ambito</span><span class="insight-icon">🏘️</span></div>
+          <strong>Centro del paese</strong>
+          <span><b>Via Paolo Ercole, Via Matteotti e Via Monferrato</b> ricorrono per velocità, traffico e sicurezza.</span>
+        </article>
+
+        <article class="insight">
+          <div class="insight-head"><span class="insight-tag">Esperienza quotidiana</span><span class="insight-icon">⚠️</span></div>
+          <strong>81,4%</strong>
+          <span>dice di incontrare <b>difficoltà spesso o qualche volta</b> quando si muove a piedi o in bicicletta.</span>
+        </article>
+
+        <article class="insight">
+          <div class="insight-head"><span class="insight-tag">Problema principale</span><span class="insight-icon">🛣️</span></div>
+          <strong>70,7%</strong>
+          <span>segnala la <b>mancanza di marciapiedi o di percorsi sicuri</b>.</span>
+        </article>
+
+        <article class="insight">
+          <div class="insight-head"><span class="insight-tag">Sicurezza stradale</span><span class="insight-icon">🚗</span></div>
+          <strong>45,7%</strong>
+          <span>indica la <b>velocità delle auto</b> come una delle principali difficoltà.</span>
+        </article>
+
+        <article class="insight">
+          <div class="insight-head"><span class="insight-tag">Intervento utile</span><span class="insight-icon">🚸</span></div>
+          <strong>38,3%</strong>
+          <span>indica <b>attraversamenti stradali più sicuri</b> tra gli interventi che aiuterebbero a muoversi di più a piedi o in bicicletta.</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3>1. Dove pensi sia più importante intervenire?</h3>
+    <p class="intro">
+      Hai <strong>10 punti</strong>. Distribuiscili tra i quattro ambiti.
+      Puoi dare più punti alla stessa voce.
+    </p>
+
+    <div class="counter">
+      <div>
+        <div class="small">Punti ancora disponibili</div>
+        <div id="remaining" class="num">10</div>
+      </div>
+      <div>
+        <div id="usedLabel" style="font-weight:850;margin-bottom:8px">0 / 10 usati</div>
+        <div id="dots" class="dots" aria-label="Punti ancora disponibili"></div>
+      </div>
+    </div>
+
+    <div id="areaGrid" class="area-grid"></div>
+  </section>
+
+  <section class="section">
+    <h3>2. Cosa dovrebbe esserci in questi interventi?</h3>
+    <p class="intro">
+      Per gli ambiti ai quali hai dato dei punti, scegli fino a <strong>3 elementi</strong> che per te non dovrebbero mancare.
+    </p>
+    <div id="detailWrap" class="detail-wrap">
+      <div class="note">Prima assegna almeno un punto a un ambito. Qui compariranno le possibili caratteristiche da scegliere.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3>3. Se il Comune dovesse iniziare da due cose, quali sceglieresti?</h3>
+    <p class="intro">
+      Scegli al massimo <strong>2 priorità</strong>.
+    </p>
+    <div id="pickGrid" class="pick-grid"></div>
+    <div id="pickLimit" class="limit">Puoi scegliere massimo 2 voci.</div>
+  </section>
+
+  <section class="section">
+    <h3>4. C'è qualcosa che manca?</h3>
+    <p class="intro">
+      Se c'è una strada, un luogo o una soluzione importante che non hai trovato qui sopra, puoi scriverla.
+      Questa risposta è facoltativa.
+    </p>
+    <textarea id="openText" aria-label="Proposta libera" placeholder="Scrivi qui la tua idea o la tua segnalazione…"></textarea>
+  </section>
+
+  <div class="actions">
+    <button id="submitBtn" class="btn primary" type="button" disabled>Distribuisci ancora 10 punti</button>
+    <button id="resetBtn" class="btn secondary" type="button">Ricomincia</button>
+  </div>
+
+  <section id="result" class="result" aria-live="polite"></section>
+<div class="footer">Comune di Felizzano · Percorso di progettazione partecipata – Bando “Città Rigenerative”</div>
+</div>
+
+<script>
+const areas = [
+  {
+    id:'fubine',
+    icon:'🚶',
+    title:'Strada Fubine / SP77 → Centro',
+    desc:'Rendere più sicuro il collegamento tra Strada Fubine e il centro con i suoi servizi.',
+    opts:[
+      'Un percorso pedonale continuo e protetto',
+      'Un percorso utilizzabile anche in bicicletta',
+      'Attraversamenti più sicuri',
+      'Auto più lente',
+      'Più luce lungo il percorso',
+      'Collegamento più diretto con scuola e servizi',
+      'Più verde e ombra'
+    ]
+  },
+  {
+    id:'centro',
+    icon:'🏘️',
+    title:'Via Paolo Ercole e spazi centrali',
+    desc:'Rendere Via Paolo Ercole e gli spazi centrali più sicuri e più facili da usare per chi cammina, va in bici o si sposta in auto.',
+    opts:[
+      'Auto più lente',
+      'Attraversamenti più sicuri',
+      'Più spazio per camminare',
+      'Percorsi più continui per le biciclette',
+      'Parcheggi organizzati meglio',
+      'Più verde e ombra',
+      'Panchine e luoghi dove fermarsi'
+    ]
+  },
+  {
+    id:'stazione',
+    icon:'🛣️',
+    title:'Centro – Cimitero',
+    desc:'Rendere più semplice e sicuro il collegamento tra il centro e il cimitero.',
+    opts:[
+      'Un percorso pedonale continuo',
+      'Un percorso sicuro per le biciclette',
+      'Attraversamenti più sicuri',
+      'Più luce',
+      'Auto più lente',
+      'Posti sicuri dove lasciare la bicicletta'
+    ]
+  },
+  {
+    id:'spalti',
+    icon:'🌿',
+    title:'Spalto Nord e percorsi pedonali esistenti',
+    desc:'Recuperare e rendere più sicuro e piacevole lo Spalto Nord e i percorsi pedonali già presenti.',
+    opts:[
+      'Migliore manutenzione',
+      'Più luce',
+      'Panchine e punti dove fermarsi',
+      'Percorsi più facili per tutti',
+      'Collegamenti più chiari con il centro',
+      'Segnaletica e indicazioni migliori'
+    ]
+  }
+]
+
+const scores = Object.fromEntries(areas.map(a=>[a.id,0]));
+const selectedDetails = Object.fromEntries(areas.map(a=>[a.id,new Set()]));
+
+const areaGrid = document.getElementById('areaGrid');
+const detailWrap = document.getElementById('detailWrap');
+const pickGrid = document.getElementById('pickGrid');
+const remaining = document.getElementById('remaining');
+const usedLabel = document.getElementById('usedLabel');
+const dots = document.getElementById('dots');
+const submitBtn = document.getElementById('submitBtn');
+const resetBtn = document.getElementById('resetBtn');
+const result = document.getElementById('result');
+
+dots.innerHTML = Array.from({length:10},(_,i)=>`<span class="dot" data-dot="${i}"></span>`).join('');
+
+areas.forEach(a=>{
+  const card=document.createElement('article');
+  card.className='area-card';
+  card.dataset.card=a.id;
+  card.innerHTML=`
+    <div class="area-top">
+      <div class="icon" aria-hidden="true">${a.icon}</div>
+      <div>
+        <h4>${a.title}</h4>
+        <p>${a.desc}</p>
+        <div class="controls">
+          <button type="button" class="pm" data-minus="${a.id}" aria-label="Togli un punto da ${a.title}">−</button>
+          <div class="value" data-value="${a.id}" aria-live="polite">0</div>
+          <button type="button" class="pm plus" data-plus="${a.id}" aria-label="Aggiungi un punto a ${a.title}">+</button>
+          <span class="small">punti</span>
+        </div>
+      </div>
+    </div>`;
+  areaGrid.appendChild(card);
+
+  const pick=document.createElement('label');
+  pick.className='pick';
+  pick.innerHTML=`<input type="checkbox" name="top2" value="${a.id}"><span><strong>${a.title}</strong></span>`;
+  pickGrid.appendChild(pick);
+});
+
+function total(){
+  return Object.values(scores).reduce((a,b)=>a+b,0);
+}
+
+function renderDetails(){
+  const active=areas.filter(a=>scores[a.id]>0);
+
+  if(!active.length){
+    detailWrap.innerHTML='<div class="note">Prima assegna almeno un punto a un ambito. Qui compariranno le possibili caratteristiche da scegliere.</div>';
+    return;
+  }
+
+  detailWrap.innerHTML='';
+
+  active.forEach(a=>{
+    const box=document.createElement('div');
+    box.className='detail-card';
+    box.innerHTML=`
+      <h4>${a.title}</h4>
+      <p>Scegli fino a 3 elementi che per te sono più importanti.</p>
+      <div class="check-grid">
+        ${a.opts.map((o,i)=>`
+          <label class="check">
+            <input type="checkbox" data-detail="${a.id}" data-opt="${i}" ${selectedDetails[a.id].has(String(i))?'checked':''}>
+            <span>${o}</span>
+          </label>`).join('')}
+      </div>
+      <div class="limit" data-limit="${a.id}">Scelte: ${selectedDetails[a.id].size} / 3</div>`;
+    detailWrap.appendChild(box);
+  });
+}
+
+function update(){
+  const used=total();
+  remaining.textContent=10-used;
+  usedLabel.textContent=`${used} / 10 usati`;
+
+  document.querySelectorAll('[data-dot]').forEach((d,i)=>{
+    d.classList.toggle('on',i<(10-used));
+  });
+
+  areas.forEach(a=>{
+    document.querySelector(`[data-value="${a.id}"]`).textContent=scores[a.id];
+    document.querySelector(`[data-plus="${a.id}"]`).disabled=used>=10;
+    document.querySelector(`[data-minus="${a.id}"]`).disabled=scores[a.id]<=0;
+    document.querySelector(`[data-card="${a.id}"]`).classList.toggle('active',scores[a.id]>0);
+
+    if(scores[a.id]===0){
+      selectedDetails[a.id].clear();
+    }
+  });
+
+  submitBtn.disabled=used!==10;
+  submitBtn.textContent=used===10
+    ? 'Mostra le mie scelte'
+    : `Distribuisci ancora ${10-used} ${10-used===1?'punto':'punti'}`;
+
+  renderDetails();
+}
+
+areaGrid.addEventListener('click',e=>{
+  const plus=e.target.closest('[data-plus]');
+  const minus=e.target.closest('[data-minus]');
+
+  if(plus && total()<10) scores[plus.dataset.plus]++;
+  if(minus && scores[minus.dataset.minus]>0) scores[minus.dataset.minus]--;
+
+  update();
+});
+
+detailWrap.addEventListener('change',e=>{
+  const cb=e.target.closest('[data-detail]');
+  if(!cb) return;
+
+  const id=cb.dataset.detail;
+  const opt=cb.dataset.opt;
+  const set=selectedDetails[id];
+
+  if(cb.checked){
+    if(set.size>=3){
+      cb.checked=false;
+      alert('Puoi scegliere al massimo 3 elementi per questo ambito.');
+      return;
+    }
+    set.add(opt);
+  } else {
+    set.delete(opt);
+  }
+
+  const lim=detailWrap.querySelector(`[data-limit="${id}"]`);
+  if(lim) lim.textContent=`Scelte: ${set.size} / 3`;
+});
+
+pickGrid.addEventListener('change',e=>{
+  if(!e.target.matches('input[name="top2"]')) return;
+
+  const checked=[...document.querySelectorAll('input[name="top2"]:checked')];
+
+  if(checked.length>2){
+    e.target.checked=false;
+    alert('Puoi scegliere al massimo 2 priorità.');
+  }
+});
+
+function esc(s){
+  return (s||'').replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+submitBtn.addEventListener('click',()=>{
+  if(total()!==10) return;
+
+  const ranking=areas
+    .filter(a=>scores[a.id]>0)
+    .sort((a,b)=>scores[b.id]-scores[a.id]);
+
+  const top2=[...document.querySelectorAll('input[name="top2"]:checked')]
+    .map(x=>areas.find(a=>a.id===x.value)?.title)
+    .filter(Boolean);
+
+  const open=esc(document.getElementById('openText').value.trim());
+
+  result.innerHTML=`
+    <div class="eyebrow">Le tue scelte</div>
+    <h3 style="margin-top:0">Ecco le priorità che hai indicato</h3>
+
+    ${ranking.map((a,i)=>`
+      <div class="rank">
+        <span><strong>${i+1}. ${a.title}</strong></span>
+        <strong>${scores[a.id]} ${scores[a.id]===1?'punto':'punti'}</strong>
+      </div>
+
+      ${selectedDetails[a.id].size
+        ? `<div style="margin:-2px 0 12px 14px;color:var(--muted);font-size:.88rem">
+            Per questo ambito hai scelto: ${[...selectedDetails[a.id]].map(idx=>a.opts[Number(idx)]).join(' · ')}
+           </div>`
+        : ''
+      }
+    `).join('')}
+
+    <p><strong>Le due priorità da cui partire:</strong> ${top2.length ? esc(top2.join(' / ')) : 'non indicate'}</p>
+
+    ${open ? `<p><strong>La tua proposta aggiuntiva:</strong> ${open}</p>` : ''}
+
+    <div class="note">
+      Le tue risposte saranno lette insieme agli altri contributi raccolti durante il percorso partecipativo.
+    </div>`;
+
+  result.classList.add('show');
+  result.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+
+resetBtn.addEventListener('click',()=>{
+  Object.keys(scores).forEach(k=>scores[k]=0);
+  Object.values(selectedDetails).forEach(s=>s.clear());
+
+  document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);
+  document.getElementById('openText').value='';
+
+  result.classList.remove('show');
+  result.innerHTML='';
+
+  update();
+});
+
+update();
+</script>
+</body>
+</html>
